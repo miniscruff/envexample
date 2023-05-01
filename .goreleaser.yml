@@ -1,0 +1,51 @@
+before:
+  hooks:
+    - go mod download
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - 386
+      - amd64
+      - arm64
+archives:
+  - format_overrides:
+    - goos: windows
+      format: zip
+release:
+  github:
+  prerelease: auto
+nfpms:
+  - homepage: https://github.com/miniscruff/envexample
+    description: Generate a .env.example from an env struct
+    license: MIT
+    maintainer: Ronnie Smith <miniscruff@hey.com>
+    formats:
+    - deb
+    - rpm
+brews:
+  - tap:
+      owner: miniscruff
+      name: envexample
+    homepage: https://github.com/miniscruff/envexample
+    description: Generate a .env.example from an env struct
+    license: MIT
+    skip_upload: auto
+scoop:
+  bucket:
+    owner: miniscruff
+    name: envexample
+  commit_msg_template: "Scoop update for {{ .ProjectName }} version {{ .Tag }}"
+  homepage: https://github.com/miniscruff/envexample
+  description: Generate a .env.example from an env struct
+  license: MIT
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  skip: false
