@@ -15,10 +15,17 @@ Using go generate, specify the `envexample` arguments
 Below is a list of common development tasks, these can easily be run using [xc](https://xcfile.dev/).
 For example `xc test` will run the test suite.
 
-### golden
-Run unit test suite with code coverage enabled
+### test
+Run unit test suite with code coverage enabled.
 ```
-go generate ./testdata/
+go test ./... -coverprofile=c.out
+```
+
+### coverage
+Run unit tests and preview the html coverage results.
+requires: test
+```
+go tool cover -html=c.out
 ```
 
 ### lint

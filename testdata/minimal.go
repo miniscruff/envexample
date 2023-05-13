@@ -3,7 +3,7 @@ package testdata
 //go:generate go run ../main.go -package testdata -struct MinimalConfig -export minimal.golden
 
 // StartingConfig handles a configuration for a project with default env options.
-type MinimalConfig struct {
+type StartingConfig struct {
 	// Listen address for our http server that is configured
 	// on multiple lines for testing.
 	Address string `env:"ADDRESS" envDefault:"localhost"`
