@@ -33,7 +33,7 @@ jobs:
       uses: goreleaser/goreleaser-action@v4.2.0
       with:
         version: latest
-        args: --rm-dist --release-notes=${{ steps.latest.outputs.output }} --skip-validate --debug
+        args: --rm-dist --release-notes=${{ steps.latest.outputs.output }}.md --skip-validate --debug
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

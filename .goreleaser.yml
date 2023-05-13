@@ -35,14 +35,14 @@ brews:
     description: Generate a .env.example from an env struct
     license: MIT
     skip_upload: auto
-scoop:
-  bucket:
-    owner: miniscruff
-    name: envexample
-  commit_msg_template: "Scoop update for {{ .ProjectName }} version {{ .Tag }}"
-  homepage: https://github.com/miniscruff/envexample
-  description: Generate a .env.example from an env struct
-  license: MIT
+scoops:
+  - bucket:
+      owner: miniscruff
+      name: envexample
+    commit_msg_template: "Scoop update for {{ .ProjectName }} version {{ .Tag }}"
+    homepage: https://github.com/miniscruff/envexample
+    description: Generate a .env.example from an env struct
+    license: MIT
 checksum:
   name_template: 'checksums.txt'
 snapshot:
