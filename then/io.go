@@ -13,5 +13,5 @@ func RunFromDir(t *testing.T, relativeDirChange string) {
 		Nil(t, os.Chdir(oldDir))
 	})
 
-	os.Chdir(relativeDirChange)
+	Nil(t, os.Chdir(relativeDirChange))
 }

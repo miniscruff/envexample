@@ -22,7 +22,7 @@ func WriteStruct(writer io.Writer, docType *godoc.Type, prefix string) error {
 
 	specs := docType.Decl.Specs
 	for _, spec := range specs {
-        // can't remember when either of these will fail
+		// can't remember when either of these will fail
 		typeSpec, _ := spec.(*ast.TypeSpec)
 		structType, _ := typeSpec.Type.(*ast.StructType)
 

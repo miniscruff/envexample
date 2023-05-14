@@ -18,7 +18,7 @@ func Test_Config_Defaults(t *testing.T) {
 	then.Nil(t, err)
 	then.Equals(t, ".env.example", cfg.ExportFile)
 	then.Equals(t, "", cfg.ConfigStruct)
-	then.Equals(t, "main", cfg.PackageName)
+	then.Equals(t, ".", cfg.Directory)
 	then.False(t, cfg.DryRun)
 	then.False(t, cfg.ShowVersion)
 	then.False(t, cfg.ShowHelp)
@@ -27,8 +27,8 @@ func Test_Config_Defaults(t *testing.T) {
 func Test_Config_OverrideDefaults(t *testing.T) {
 	args := []string{
 		"-export", "test.env.example",
-		"-struct", "myStruct",
-		"-package", "config",
+		"-type", "myStruct",
+		"-dir", "config",
 		"-dry", "-v", "-h",
 	}
 
@@ -36,7 +36,7 @@ func Test_Config_OverrideDefaults(t *testing.T) {
 	then.Nil(t, err)
 	then.Equals(t, "test.env.example", cfg.ExportFile)
 	then.Equals(t, "myStruct", cfg.ConfigStruct)
-	then.Equals(t, "config", cfg.PackageName)
+	then.Equals(t, "config", cfg.Directory)
 	then.True(t, cfg.DryRun)
 	then.True(t, cfg.ShowVersion)
 	then.True(t, cfg.ShowHelp)
@@ -44,62 +44,63 @@ func Test_Config_OverrideDefaults(t *testing.T) {
 
 func Test_Config_ValidArgs(t *testing.T) {
 	args := []string{
-		"-struct", "MyConfig",
-		"-package", "config",
+		"-type", "MyConfig",
+		"-dir", "config",
 	}
 
 	cfg, err := NewConfig(args)
 	then.Nil(t, err)
-    then.Nil(t, cfg.Validate())
+	then.Nil(t, cfg.Validate())
 }
 
 func Test_Config_InvalidArgsNoStruct(t *testing.T) {
 	cfg, err := NewConfig([]string{})
 	then.Nil(t, err)
-    then.Err(t, errInvalidConfigNoStruct, cfg.Validate())
+	then.Err(t, errInvalidConfigNoStruct, cfg.Validate())
 }
 
 func Test_Config_InvalidArgsNoExport(t *testing.T) {
 	args := []string{
-        "-struct", "MyConfigStruct",
+		"-type", "MyConfigStruct",
 		"-export", "",
 	}
 
 	cfg, err := NewConfig(args)
 	then.Nil(t, err)
-    then.Err(t, errInvalidConfigNoExport, cfg.Validate())
+	then.Err(t, errInvalidConfigNoExport, cfg.Validate())
 }
 
 func Test_Config_StdoutOnDryRun(t *testing.T) {
-    cfg := &Config{
-        DryRun: true,
-    }
-    writer, err := cfg.Writer()
-    then.Nil(t, err)
-    then.Equals(t, os.Stdout, writer.(*os.File))
+	cfg := &Config{
+		DryRun: true,
+	}
+	writer, err := cfg.Writer()
+	then.Nil(t, err)
+	then.Equals(t, os.Stdout, writer.(*os.File))
 }
 
 func Test_Config_ExportFileWriter(t *testing.T) {
-    dir := t.TempDir()
+	dir := t.TempDir()
 
-    cfg := &Config{
-        ExportFile: dir+"/.env.example",
-    }
-    writer, err := cfg.Writer()
-    then.Nil(t, err)
-    defer writer.Close()
+	cfg := &Config{
+		ExportFile: dir + "/.env.example",
+	}
+	writer, err := cfg.Writer()
+	then.Nil(t, err)
 
-    exportFile, ok := writer.(*os.File)
-    then.True(t, ok)
-    then.Equals(t, cfg.ExportFile, exportFile.Name())
+	defer writer.Close()
+
+	exportFile, ok := writer.(*os.File)
+	then.True(t, ok)
+	then.Equals(t, cfg.ExportFile, exportFile.Name())
 }
 
 func Test_Config_ExportFileError(t *testing.T) {
-    dir := t.TempDir()
+	dir := t.TempDir()
 
-    cfg := &Config{
-        ExportFile: dir+"/.",
-    }
-    _, err := cfg.Writer()
-    then.Err(t, errUnableToCreateWriter, err)
+	cfg := &Config{
+		ExportFile: dir + "/.",
+	}
+	_, err := cfg.Writer()
+	then.Err(t, errUnableToCreateWriter, err)
 }

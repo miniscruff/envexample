@@ -11,7 +11,7 @@ import (
 type Config struct {
 	ExportFile   string
 	ConfigStruct string
-	PackageName  string
+	Directory    string
 	DryRun       bool
 	ShowVersion  bool
 	ShowHelp     bool
@@ -20,18 +20,18 @@ type Config struct {
 // NewConfig will load a config from CLI flags.
 func NewConfig(args []string) (*Config, error) {
 	cfg := Config{}
-    flagSet := flag.NewFlagSet("", flag.ContinueOnError)
+	flagSet := flag.NewFlagSet("", flag.ContinueOnError)
 
 	flagSet.StringVar(&cfg.ExportFile, "export", ".env.example", "`filepath` to export generated example to")
-	flagSet.StringVar(&cfg.ConfigStruct, "struct", "", "`struct` to build example from")
-	flagSet.StringVar(&cfg.PackageName, "package", "main", "`package` our config struct is located in")
+	flagSet.StringVar(&cfg.ConfigStruct, "type", "", "`struct` to build example from")
+	flagSet.StringVar(&cfg.Directory, "dir", ".", "`directory` our config struct is located in")
 	flagSet.BoolVar(&cfg.DryRun, "dry", false, "output to stdout instead of writing to file")
 	flagSet.BoolVar(&cfg.ShowVersion, "v", false, "show version")
 	flagSet.BoolVar(&cfg.ShowHelp, "h", false, "show help")
 
-    if err := flagSet.Parse(args); err != nil {
-        return nil, fmt.Errorf("%w: %w", errUnableToParseFlags, err)
-    }
+	if err := flagSet.Parse(args); err != nil {
+		return nil, fmt.Errorf("%w: %w", errUnableToParseFlags, err)
+	}
 
 	return &cfg, nil
 }

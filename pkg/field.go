@@ -8,6 +8,49 @@ import (
 	"strings"
 )
 
+type EnvTagOptions struct {
+	Key string
+
+	LoadFile bool
+	Unset    bool
+	NotEmpty bool
+	Required bool
+}
+
+func NewEnvTagOptions(name string, structTag *ast.BasicLit) *EnvTagOptions {
+	opts := &EnvTagOptions{
+		Key: name,
+	}
+
+	if structTag == nil {
+		return opts
+	}
+
+	structTags := reflect.StructTag(strings.Trim(structTag.Value, "`"))
+
+	optValues := strings.Split(structTags.Get("env"), ",")
+	if optValues[0] != "" {
+		opts.Key = optValues[0]
+	}
+
+	for _, tag := range optValues[1:] {
+		switch tag {
+		case "":
+			continue
+		case "file":
+			opts.LoadFile = true
+		case "required":
+			opts.Required = true
+		case "unset":
+			opts.Unset = true
+		case "notEmpty":
+			opts.NotEmpty = true
+		}
+	}
+
+	return opts
+}
+
 func WriteField(writer io.Writer, field *ast.Field, prefix string) error {
 	// just checking the first write
 	if _, err := writer.Write([]byte("# ")); err != nil {
@@ -17,55 +60,20 @@ func WriteField(writer io.Writer, field *ast.Field, prefix string) error {
 	_, _ = writer.Write([]byte(strings.Replace(strings.Trim(field.Doc.Text(), "\n"), "\n", "\n# ", -1)))
 	_, _ = writer.Write([]byte("\n"))
 
-	var (
-		structTags reflect.StructTag
-		tags       []string
-		linePrefix string
-		loadFile   bool
-		unset      bool
-		notEmpty   bool
-		required   bool
-	)
-
+	linePrefix := ""
 	defaultValue := ""
-	ownKey := field.Names[0].Name
-
-	if field.Tag != nil {
-		structTags = reflect.StructTag(strings.Trim(field.Tag.Value, "`"))
-
-		opts := strings.Split(structTags.Get("env"), ",")
-		if opts[0] != "" {
-			ownKey = opts[0]
-		}
-
-		tags = opts[1:]
-	}
-
-	for _, tag := range tags {
-		switch tag {
-		case "":
-			continue
-		case "file":
-			loadFile = true
-		case "required":
-			required = true
-		case "unset":
-			unset = true
-		case "notEmpty":
-			notEmpty = true
-		}
-	}
+	opts := NewEnvTagOptions(field.Names[0].Name, field.Tag)
 
 	// part of #6
 	// if def, ok := structTags.Lookup("envDefault"); ok {
 	// defaultValue = def
 	// }
 
-	if notEmpty && defaultValue == "" {
+	if opts.NotEmpty && defaultValue == "" {
 		defaultValue = "can not be empty"
 	}
 
-	if !required && !notEmpty {
+	if !opts.Required && !opts.NotEmpty {
 		linePrefix = "#"
 	}
 
@@ -74,11 +82,11 @@ func WriteField(writer io.Writer, field *ast.Field, prefix string) error {
 		defaultValue = `"` + defaultValue + `"`
 	}
 
-	if loadFile {
+	if opts.LoadFile {
 		_, _ = writer.Write([]byte(helpFile))
 	}
 
-	if unset {
+	if opts.Unset {
 		_, _ = writer.Write([]byte(helpUnset))
 	}
 
@@ -86,7 +94,7 @@ func WriteField(writer io.Writer, field *ast.Field, prefix string) error {
 		"%s%s%s=%s",
 		linePrefix,
 		prefix,
-		ownKey,
+		opts.Key,
 		defaultValue,
 	)))
 

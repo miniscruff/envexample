@@ -19,7 +19,7 @@ type GoldenTest struct {
 func (golden GoldenTest) Run(t *testing.T) {
 	// override config values used by all golden tests
 	cfg := golden.Config
-	cfg.PackageName = "testdata"
+	cfg.Directory = "testdata"
 
 	var writer bytes.Buffer
 	err := Run(&writer, "dev", cfg)
@@ -30,7 +30,9 @@ func (golden GoldenTest) Run(t *testing.T) {
 
 	shouldOverride := os.Getenv(overrideKey)
 	if shouldOverride == "true" {
-		goldenFile, err := os.Create(fullPath)
+		var goldenFile io.WriteCloser
+
+		goldenFile, err = os.Create(fullPath)
 		if err != nil {
 			t.Errorf("opening file: '%v'", fullPath)
 		}
@@ -41,6 +43,7 @@ func (golden GoldenTest) Run(t *testing.T) {
 		}
 
 		defer goldenFile.Close()
+
 		return
 	}
 

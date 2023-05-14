@@ -12,10 +12,10 @@ import (
 var version = "dev" // injected by goreleaser
 
 func main() {
-    cfg, err := pkg.NewConfig(os.Args[1:])
-    if err != nil {
-        log.Fatal(err)
-    }
+	cfg, err := pkg.NewConfig(os.Args[1:])
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	if cfg.ShowVersion {
 		fmt.Println(version)
@@ -27,7 +27,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	if err := cfg.Validate(); err != nil {
+	if err = cfg.Validate(); err != nil {
 		log.Fatal(err)
 	}
 
