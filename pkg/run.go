@@ -10,13 +10,13 @@ import (
 
 type PackageTypes map[string]*godoc.Type
 
-func NewPackageTypes(packageName string) (PackageTypes, error) {
+func NewPackageTypes(directory string) (PackageTypes, error) {
 	fset := token.NewFileSet()
-	packages, _ := parser.ParseDir(fset, "./", nil, parser.ParseComments)
+	packages, _ := parser.ParseDir(fset, "./"+directory, nil, parser.ParseComments)
 
-	projectPackage, ok := packages[packageName]
+	projectPackage, ok := packages[directory]
 	if !ok {
-		return nil, fmt.Errorf("%w: '%v'", errUnableToFindPackage, packageName)
+		return nil, fmt.Errorf("%w: '%v'", errUnableToFindPackage, directory)
 	}
 
 	p := godoc.New(projectPackage, "./", 0)
@@ -35,7 +35,7 @@ func Run(writer io.Writer, version string, cfg *Config) error {
 		return fmt.Errorf("%w: %w", errUnableToWrite, err)
 	}
 
-	pkgTypes, err := NewPackageTypes(cfg.PackageName)
+	pkgTypes, err := NewPackageTypes(cfg.Directory)
 	if err != nil {
 		return fmt.Errorf("%w: %w", errUnableToBuildPackages, err)
 	}

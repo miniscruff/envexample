@@ -1,28 +1,5 @@
 package main
 
-/* todo list
-env tag:
-no env tag at all ``
-name defined `env:"NAME"`
-name not defined `env:""`
-required `env:"NAME,required"`
-not empty `env:"NAME,notempty"`
-unset `env:"NAME,unset"`
-from file `env:"NAME,fromfile"`
-
-
-tags:
-env prefix `envPrefix:"DB_"`
-env expand `envExpand:"true"`
-env separator ( for slices ) `envSeperator:":"`
-env default `envDefault:"DEFAULT_VALUE"`
-
-options:
-tag name
-use field name by default
-required if no def
-*/
-
 import (
 	"flag"
 	"fmt"
@@ -35,7 +12,11 @@ import (
 var version = "dev" // injected by goreleaser
 
 func main() {
-	cfg := pkg.NewConfig()
+	cfg, err := pkg.NewConfig(os.Args[1:])
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	if cfg.ShowVersion {
 		fmt.Println(version)
 		os.Exit(0)
@@ -46,7 +27,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	if err := cfg.Validate(); err != nil {
+	if err = cfg.Validate(); err != nil {
 		log.Fatal(err)
 	}
 

@@ -36,20 +36,13 @@ func MapEquals[M1, M2 ~map[K]V, K, V comparable](t *testing.T, expected M1, actu
 	for k, v1 := range expected {
 		v2, ok := actual[k]
 		if !ok {
-			t.Errorf(
-				"actual map is missing key '%v', expected value: '%v'",
-				k,
-				v1,
-			)
+			t.Errorf("actual[%v] is missing, expected value: '%v'", k, v1)
+			return
 		}
 
 		if v1 != v2 {
-			t.Errorf(
-				"expected value does not equal actual of key '%v': expected '%v' != '%v'",
-				k,
-				v1,
-				v2,
-			)
+			t.Errorf("expected[%v] != actual[%v]: '%v' != '%v'", k, k, v1, v2)
+			return
 		}
 	}
 }
@@ -59,17 +52,14 @@ func SliceEquals[T comparable](t *testing.T, expected, actual []T) {
 	t.Helper()
 
 	if len(expected) != len(actual) {
-		t.Errorf("length of expected does not equal actual: %v != %v", len(expected), len(actual))
+		t.Errorf("len(expected) != len(actual): %v != %v", len(expected), len(actual))
+		return
 	}
 
 	for i := 0; i < len(expected); i++ {
 		if expected[i] != actual[i] {
-			t.Errorf(
-				"expected value does not equal actual at index %v: expected '%v' != '%v'",
-				i,
-				expected[i],
-				actual[i],
-			)
+			t.Errorf("expected[%d] != actual[%d]: '%v' != '%v'", i, i, expected[i], actual[i])
+			return
 		}
 	}
 }

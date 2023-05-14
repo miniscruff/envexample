@@ -21,15 +21,17 @@ func Test_Run_UnableToWrite(t *testing.T) {
 func Test_Run_UnableToBuildPackages(t *testing.T) {
 	var writer bytes.Buffer
 	err := Run(&writer, "ver", &Config{
-		PackageName: "badgopkgagain",
+		Directory: "badgopkgagain",
 	})
 	then.Err(t, errUnableToBuildPackages, err)
 }
 
 func Test_Run_UnableToWriteStruct(t *testing.T) {
+	then.RunFromDir(t, "..")
+
 	badWriter := then.NewCountWriter(1)
 	err := Run(badWriter, "ver", &Config{
-		PackageName: "pkg",
+		Directory: "pkg",
 	})
 	badWriter.Raised(t, err)
 }
