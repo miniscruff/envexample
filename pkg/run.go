@@ -12,7 +12,7 @@ type PackageTypes map[string]*godoc.Type
 
 func NewPackageTypes(packageName string) (PackageTypes, error) {
 	fset := token.NewFileSet()
-	packages, _ := parser.ParseDir(fset, "./", nil, parser.ParseComments)
+	packages, _ := parser.ParseDir(fset, "./"+packageName, nil, parser.ParseComments)
 
 	projectPackage, ok := packages[packageName]
 	if !ok {

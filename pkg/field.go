@@ -28,6 +28,8 @@ func WriteField(writer io.Writer, field *ast.Field, prefix string) error {
 		_, _ = writer.Write([]byte(def))
 	} // need to write something else as the value
 
+    // will need this later for slice logic I believe
+    /*
 	switch fieldType := field.Type.(type) {
 	case *ast.Ident:
 		// props.TypeName = fieldType.Name
@@ -50,6 +52,7 @@ func WriteField(writer io.Writer, field *ast.Field, prefix string) error {
 			errUnableToWriteField,
 		)
 	}
+    */
 
 	// if envPrefix, ok := tags.Lookup("envPrefix"); ok {
 	// *queue = append(*queue, QueueEntry{

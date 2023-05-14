@@ -27,6 +27,8 @@ func Test_Run_UnableToBuildPackages(t *testing.T) {
 }
 
 func Test_Run_UnableToWriteStruct(t *testing.T) {
+    then.RunFromDir(t, "..")
+
 	badWriter := then.NewCountWriter(1)
 	err := Run(badWriter, "ver", &Config{
 		PackageName: "pkg",

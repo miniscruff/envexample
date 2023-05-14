@@ -10,6 +10,7 @@ var (
 	errInvalidConfigNoStruct = errors.New("config struct not defined")
 	errInvalidConfigNoExport = errors.New("export file empty")
 	errUnknownFieldType      = errors.New("unknown field type")
+	errUnableToParseFlags    = errors.New("unable to parse cli flags")
 	errUnableToCreateWriter  = errors.New("unable to create writer")
 	errUnableToWriteField    = errors.New("unable to write field")
 	errUnableToWriteStruct   = errors.New("unable to write struct")
