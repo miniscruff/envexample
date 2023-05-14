@@ -2,8 +2,10 @@ package pkg
 
 import (
 	"bytes"
+	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/miniscruff/envexample/then"
@@ -20,20 +22,48 @@ func (golden GoldenTest) Run(t *testing.T) {
 	cfg.PackageName = "testdata"
 
 	var writer bytes.Buffer
-    err := Run(&writer, "dev", cfg)
+	err := Run(&writer, "dev", cfg)
 	then.Nil(t, err)
 
+	fullPath := filepath.Join("testdata", golden.GoldenFile+".golden")
+	overrideKey := "GOLDEN_" + strings.ToUpper(golden.GoldenFile)
+
+	shouldOverride := os.Getenv(overrideKey)
+	if shouldOverride == "true" {
+		goldenFile, err := os.Create(fullPath)
+		if err != nil {
+			t.Errorf("opening file: '%v'", fullPath)
+		}
+
+		_, err = io.Copy(goldenFile, &writer)
+		if err != nil {
+			t.Errorf("writing golden file: '%v'", fullPath)
+		}
+
+		defer goldenFile.Close()
+		return
+	}
+
+	t.Logf(`Run "%s=true xc test" if the output below matches the updated value`, overrideKey)
 	t.Log(writer.String())
 
-	NormalizedFileContents(t, writer.Bytes(), "testdata", golden.GoldenFile)
+	bs, err := os.ReadFile(fullPath)
+	if err != nil {
+		t.Errorf("reading file: '%v'", fullPath)
+	}
+
+	normalized := bytes.ReplaceAll(bs, []byte("\r\n"), []byte("\n"))
+	generatedBytes := writer.Bytes()
+
+	then.SliceEquals(t, generatedBytes, normalized)
 }
 
 func TestGoldens(t *testing.T) {
-    then.RunFromDir(t, "..")
+	then.RunFromDir(t, "..")
 
 	for _, golden := range []GoldenTest{
 		{
-			GoldenFile: "starting.golden",
+			GoldenFile: "starting",
 			Config: &Config{
 				ConfigStruct: "StartingConfig",
 			},
@@ -41,24 +71,4 @@ func TestGoldens(t *testing.T) {
 	} {
 		t.Run(golden.GoldenFile, golden.Run)
 	}
-}
-
-// FileContents will check the contents of a file.
-func NormalizedFileContents(t *testing.T, contents []byte, paths ...string) {
-	t.Helper()
-
-	fullPath := filepath.Join(paths...)
-
-	bs, err := os.ReadFile(fullPath)
-	if err != nil {
-		t.Errorf("reading file: '%v'", fullPath)
-	}
-
-    if len(bs) == 0 {
-        t.Error("file is empty", fullPath)
-    }
-
-	normalized := bytes.ReplaceAll(bs, []byte("\r\n"), []byte("\n"))
-
-	then.SliceEquals(t, contents, normalized)
 }

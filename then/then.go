@@ -41,6 +41,7 @@ func MapEquals[M1, M2 ~map[K]V, K, V comparable](t *testing.T, expected M1, actu
 				k,
 				v1,
 			)
+            return
 		}
 
 		if v1 != v2 {
@@ -50,6 +51,7 @@ func MapEquals[M1, M2 ~map[K]V, K, V comparable](t *testing.T, expected M1, actu
 				v1,
 				v2,
 			)
+            return
 		}
 	}
 }
@@ -60,6 +62,7 @@ func SliceEquals[T comparable](t *testing.T, expected, actual []T) {
 
 	if len(expected) != len(actual) {
 		t.Errorf("length of expected does not equal actual: %v != %v", len(expected), len(actual))
+        return
 	}
 
 	for i := 0; i < len(expected); i++ {
@@ -70,6 +73,7 @@ func SliceEquals[T comparable](t *testing.T, expected, actual []T) {
 				expected[i],
 				actual[i],
 			)
+            return
 		}
 	}
 }
