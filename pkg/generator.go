@@ -72,6 +72,10 @@ func NewGenerator(cfg *Config) (*Generator, error) {
 func (g *Generator) WriteStruct(writer io.Writer, entry *StructQueueEntry) {
 	docType := g.packageTypes[entry.TypeName]
 
+	if docType == nil {
+		panic("doctype not found: " + entry.TypeName)
+	}
+
 	if entry.FieldDocs != "" {
 		_, _ = writer.Write([]byte("# "))
 		_, _ = writer.Write([]byte(strings.Replace(strings.Trim(entry.FieldDocs, "\n"), "\n", "\n# ", -1)))

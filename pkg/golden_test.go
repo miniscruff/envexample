@@ -72,6 +72,14 @@ func TestGoldens(t *testing.T) {
 
 	for _, golden := range []GoldenTest{
 		{
+			GoldenFile: "example",
+			Config: &Config{
+				ConfigStruct: "Config",
+				TagName:      "env",
+				Prefix:       "",
+			},
+		},
+		{
 			GoldenFile: "starting",
 			Config: &Config{
 				ConfigStruct: "StartingConfig",
