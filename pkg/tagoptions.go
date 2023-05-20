@@ -22,10 +22,15 @@ type EnvTagOptions struct {
 	Prefix   string
 }
 
-func NewEnvTagOptions(name string, field *ast.Field) *EnvTagOptions {
+func NewEnvTagOptions(name string, gen *Generator, field *ast.Field) *EnvTagOptions {
 	opts := &EnvTagOptions{
 		Key:            name,
 		SliceSeperator: ",",
+		Required:       gen.RequiredIfNoDef,
+	}
+
+	if gen.UseFieldNameByDefault {
+		opts.Key = toEnvName(name)
 	}
 
 	switch fieldType := field.Type.(type) {
@@ -44,7 +49,7 @@ func NewEnvTagOptions(name string, field *ast.Field) *EnvTagOptions {
 
 	structTags := reflect.StructTag(strings.Trim(structTag.Value, "`"))
 
-	optValues := strings.Split(structTags.Get("env"), ",")
+	optValues := strings.Split(structTags.Get(gen.TagName), ",")
 	if optValues[0] != "" {
 		opts.Key = optValues[0]
 	}
@@ -70,6 +75,7 @@ func NewEnvTagOptions(name string, field *ast.Field) *EnvTagOptions {
 
 	if def, ok := structTags.Lookup("envDefault"); ok {
 		opts.DefaultValueTag = def
+		opts.Required = false
 	}
 
 	if prefix, ok := structTags.Lookup("envPrefix"); ok {

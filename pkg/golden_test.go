@@ -30,7 +30,7 @@ func (golden GoldenTest) Run(t *testing.T) {
 	err = gen.Run(&writer)
 	then.Nil(t, err)
 
-	fullPath := filepath.Join("testdata", golden.GoldenFile+".golden")
+	fullPath := filepath.Join("testdata", golden.GoldenFile+".golden.env")
 	overrideKey := "GOLDEN_" + strings.ToUpper(golden.GoldenFile)
 
 	shouldOverride := os.Getenv(overrideKey)
@@ -52,6 +52,7 @@ func (golden GoldenTest) Run(t *testing.T) {
 		return
 	}
 
+	t.Logf("Config: %+v", cfg)
 	t.Logf(`Run "%s=true xc test" if the output below matches the updated value`, overrideKey)
 	t.Log(writer.String())
 
@@ -74,6 +75,18 @@ func TestGoldens(t *testing.T) {
 			GoldenFile: "starting",
 			Config: &Config{
 				ConfigStruct: "StartingConfig",
+				TagName:      "env",
+				Prefix:       "",
+			},
+		},
+		{
+			GoldenFile: "configs_enabled",
+			Config: &Config{
+				ConfigStruct:          "EnvConfigsEnabled",
+				RequiredIfNoDef:       true,
+				UseFieldNameByDefault: true,
+				TagName:               "cenv",
+				Prefix:                "PROJ_",
 			},
 		},
 	} {

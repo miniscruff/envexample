@@ -40,20 +40,17 @@ type StartingConfig struct {
 
 // ServerConfig handles configurations for an HTTP server
 type ServerConfig struct {
-	Host string `env:"HOST" envDefault:"localhost"`
-	Port int    `env:"PORT" envDefault:"8080"`
+	Host   string             `env:"HOST" envDefault:"localhost"`
+	Port   int                `env:"PORT" envDefault:"8080"`
+	Nested NestedServerConfig `envPrefix:"NESTED_"`
+}
+
+// NestedServerConfig is a nested config type under server config.
+type NestedServerConfig struct {
+	Debug bool `env:"DEBUG" envDefault:"true"`
 }
 
 type AdminConfig struct {
 	AdminUsername string `env:"ADMIN_USER" envDefault:"ADMIN_USER"`
 	Adminpassword string `env:"ADMIN_PASSWORD" envDefault:"ADMIN_PASS"`
 }
-
-/*
-ValueWithDef `env:"VALUE_WITH_DEF" envDefault:"secret_value"`
-	Password     string        `env:"PASSWORD,unset"`
-	IsProduction bool          `env:"PRODUCTION"`
-	Hosts        []string      `env:"HOSTS" envSeparator:":"`
-	Duration     time.Duration `env:"DURATION"`
-	TempFolder   string        `env:"TEMP_FOLDER" envDefault:"${HOME}/tmp" envExpand:"true"`
-*/
