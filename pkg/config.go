@@ -9,6 +9,7 @@ import (
 
 // Config handles all the envexample configurations.
 type Config struct {
+	// Our configs for parsing and building
 	ExportFile   string
 	ConfigStruct string
 	Directory    string
@@ -16,12 +17,22 @@ type Config struct {
 	DryRun       bool
 	ShowVersion  bool
 	ShowHelp     bool
+
+	// Wrappers for env configs
+	RequiredIfNoDef       bool
+	UseFieldNameByDefault bool
+	Prefix                string
+	TagName               string
+
+	*flag.FlagSet
 }
 
 // NewConfig will load a config from CLI flags.
 func NewConfig(args []string) (*Config, error) {
-	cfg := Config{}
 	flagSet := flag.NewFlagSet("", flag.ContinueOnError)
+	cfg := Config{
+		FlagSet: flagSet,
+	}
 
 	flagSet.StringVar(&cfg.ExportFile, "export", ".env.example", "`filepath` to export generated example to")
 	flagSet.StringVar(&cfg.ConfigStruct, "type", "", "`struct` to build example from")
@@ -29,6 +40,12 @@ func NewConfig(args []string) (*Config, error) {
 	flagSet.BoolVar(&cfg.DryRun, "dry", false, "output to stdout instead of writing to file")
 	flagSet.BoolVar(&cfg.ShowVersion, "v", false, "show version")
 	flagSet.BoolVar(&cfg.ShowHelp, "h", false, "show help")
+
+	// env wrapper configs
+	flagSet.StringVar(&cfg.Prefix, "prefix", "", "prefix config when parsing in env")
+	flagSet.StringVar(&cfg.TagName, "tag", "env", "tag name config when parsing in env")
+	flagSet.BoolVar(&cfg.RequiredIfNoDef, "required-if-no-def", false, "required if no default config when parsing in env")
+	flagSet.BoolVar(&cfg.UseFieldNameByDefault, "use-field-name", false, "use field name by default config when parsing in env")
 
 	if err := flagSet.Parse(args); err != nil {
 		return nil, fmt.Errorf("%w: %w", errUnableToParseFlags, err)

@@ -29,6 +29,10 @@ func Test_Config_OverrideDefaults(t *testing.T) {
 		"-export", "test.env.example",
 		"-type", "myStruct",
 		"-dir", "config",
+		"-prefix", "C_",
+		"-tag", "cenv",
+		"-required-if-no-def",
+		"-use-field-name",
 		"-dry", "-v", "-h",
 	}
 
@@ -37,9 +41,13 @@ func Test_Config_OverrideDefaults(t *testing.T) {
 	then.Equals(t, "test.env.example", cfg.ExportFile)
 	then.Equals(t, "myStruct", cfg.ConfigStruct)
 	then.Equals(t, "config", cfg.Directory)
+	then.Equals(t, "cenv", cfg.TagName)
+	then.Equals(t, "C_", cfg.Prefix)
 	then.True(t, cfg.DryRun)
 	then.True(t, cfg.ShowVersion)
 	then.True(t, cfg.ShowHelp)
+	then.True(t, cfg.RequiredIfNoDef)
+	then.True(t, cfg.UseFieldNameByDefault)
 }
 
 func Test_Config_ValidArgs(t *testing.T) {

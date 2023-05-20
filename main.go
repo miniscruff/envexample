@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -23,7 +22,7 @@ func main() {
 	}
 
 	if cfg.ShowHelp {
-		flag.PrintDefaults()
+		cfg.PrintDefaults()
 		os.Exit(0)
 	}
 

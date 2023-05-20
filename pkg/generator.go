@@ -42,6 +42,10 @@ type Generator struct {
 	packageTypes PackageTypes
 	queue        []*StructQueueEntry
 	version      string
+
+	RequiredIfNoDef       bool
+	UseFieldNameByDefault bool
+	TagName               string
 }
 
 func NewGenerator(cfg *Config) (*Generator, error) {
@@ -56,8 +60,12 @@ func NewGenerator(cfg *Config) (*Generator, error) {
 		queue: []*StructQueueEntry{
 			{
 				TypeName: cfg.ConfigStruct,
+				Prefix:   cfg.Prefix,
 			},
 		},
+		RequiredIfNoDef:       cfg.RequiredIfNoDef,
+		UseFieldNameByDefault: cfg.UseFieldNameByDefault,
+		TagName:               cfg.TagName,
 	}, nil
 }
 
@@ -99,12 +107,12 @@ func (g *Generator) WriteStruct(writer io.Writer, entry *StructQueueEntry) {
 }
 
 func (g *Generator) WriteField(writer io.Writer, field *ast.Field, prefix string) {
-	opts := NewEnvTagOptions(field.Names[0].Name, field)
+	opts := NewEnvTagOptions(field.Names[0].Name, g, field)
 	if _, found := g.packageTypes[opts.TypeName]; found {
 		g.queue = append(g.queue, &StructQueueEntry{
 			TypeName:  opts.TypeName,
 			FieldDocs: field.Doc.Text(),
-			Prefix:    opts.Prefix,
+			Prefix:    prefix + opts.Prefix,
 		})
 
 		// write our nested struct later
