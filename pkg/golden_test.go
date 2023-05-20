@@ -20,9 +20,14 @@ func (golden GoldenTest) Run(t *testing.T) {
 	// override config values used by all golden tests
 	cfg := golden.Config
 	cfg.Directory = "testdata"
+	cfg.Version = "dev"
 
 	var writer bytes.Buffer
-	err := Run(&writer, "dev", cfg)
+
+	gen, err := NewGenerator(cfg)
+	then.Nil(t, err)
+
+	err = gen.Run(&writer)
 	then.Nil(t, err)
 
 	fullPath := filepath.Join("testdata", golden.GoldenFile+".golden")
