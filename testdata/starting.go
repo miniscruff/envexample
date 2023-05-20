@@ -28,10 +28,10 @@ type StartingConfig struct {
 	// SliceCustomSep loads a slice of values seperated by a slash
 	SliceCustomSep []string `env:"SLICE_CUSTOM_SEP,required" envSeperator:"/"`
 
-    // Server loads a separate struct with a prefix
+	// Server loads a separate struct with a prefix
 	Server ServerConfig `envPrefix:"SERVER_"`
 
-    // Admin loads a separate struct without a custom prefix
+	// Admin loads a separate struct without a custom prefix
 	Admin AdminConfig
 
 	// Not part of our .env.example

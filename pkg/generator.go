@@ -96,8 +96,6 @@ func (g *Generator) WriteStruct(writer io.Writer, entry *StructQueueEntry) {
 	}
 
 	_, _ = writer.Write([]byte("\n"))
-
-	return
 }
 
 func (g *Generator) WriteField(writer io.Writer, field *ast.Field, prefix string) {
@@ -140,8 +138,6 @@ func (g *Generator) WriteField(writer io.Writer, field *ast.Field, prefix string
 	)))
 
 	_, _ = writer.Write([]byte("\n"))
-
-	return
 }
 
 func (g *Generator) Run(writer io.Writer) error {
