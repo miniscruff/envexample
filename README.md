@@ -1,5 +1,5 @@
 # envexample
-Generate a .env.example from an env struct
+Generate a '.env.example' from an [env configured](https://github.com/caarlos0/env) struct
 
 ## Installation
 TODO
