@@ -23,12 +23,16 @@ type Config struct {
 	UseFieldNameByDefault bool
 	Prefix                string
 	TagName               string
+
+	*flag.FlagSet
 }
 
 // NewConfig will load a config from CLI flags.
 func NewConfig(args []string) (*Config, error) {
-	cfg := Config{}
 	flagSet := flag.NewFlagSet("", flag.ContinueOnError)
+	cfg := Config{
+		FlagSet: flagSet,
+	}
 
 	flagSet.StringVar(&cfg.ExportFile, "export", ".env.example", "`filepath` to export generated example to")
 	flagSet.StringVar(&cfg.ConfigStruct, "type", "", "`struct` to build example from")
