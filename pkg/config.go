@@ -12,6 +12,7 @@ type Config struct {
 	ExportFile   string
 	ConfigStruct string
 	Directory    string
+	Version      string
 	DryRun       bool
 	ShowVersion  bool
 	ShowHelp     bool

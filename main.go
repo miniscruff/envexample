@@ -38,7 +38,14 @@ func main() {
 
 	defer writer.Close()
 
-	err = pkg.Run(writer, version, cfg)
+	cfg.Version = version
+
+	gen, err := pkg.NewGenerator(cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = gen.Run(writer)
 	if err != nil {
 		log.Fatal(err)
 	}

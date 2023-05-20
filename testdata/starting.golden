@@ -11,10 +11,33 @@
 #NoEnvStructTag=""
 # NotEmpty specifies a field is required and can not be empty
 NotEmpty="can not be empty"
+# OptionalWithDef preloads the default value for our field as a comment
+#VALUE_WITH_DEF=secret_value
 # RequiredNoDefault specifies a required value but no default
 RequiredNoDefault=""
+# RequiredWithDef preloads the default value for our field
+VALUE_WITH_DEF=secret_value
+# SliceCustomSep loads a slice of values seperated by a slash
+# Info: Values are separated by '/'.
+SLICE_CUSTOM_SEP=""
+# SliceWithDefaultSep loads a slice of values seperated by a comma
+# Info: Values are separated by ','.
+SLICE_WITH_DEFAULT_SEP=""
 # UnsetVar will unset our environment variable after it is loaded
 # Info: After loading environment variable is unset.
 #UnsetVar=""
 # WithEnvName sets our env var key
 #WITH_ENV_NAME=""
+
+# Admin loads a separate struct without a custom prefix
+#
+#ADMIN_USER=ADMIN_USER
+#ADMIN_PASSWORD=ADMIN_PASS
+
+# Server loads a separate struct with a prefix
+#
+# ServerConfig handles configurations for an HTTP server
+#
+#SERVER_HOST=localhost
+#SERVER_PORT=8080
+
