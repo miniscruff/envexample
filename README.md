@@ -20,7 +20,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/caarlos0/env/v8"
 )
@@ -36,7 +35,7 @@ type Config struct {
 }
 
 func main() {
-	cfg := config{}
+	cfg := Config{}
 	if err := env.Parse(&cfg); err != nil {
 		fmt.Printf("%+v\n", err)
     }
@@ -65,9 +64,14 @@ To generate an `.env.example` file similar to:
 ```
 
 ### Generate
-You can also use go generate:
+You can also use go generate using one of the following styles:
 ```
-//go:generate github.com/miniscruff/envexample@latest -struct Config
+// directly run latest
+//go:generate go run github.com/miniscruff/envexample@latest -struct Config
+// with a specific version
+//go:generate go run github.com/miniscruff/envexample@v0.1.0 -struct Config
+// with our installed version
+//go:generate envexample -struct Config
 ```
 
 ## CLI Arguments
