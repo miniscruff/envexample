@@ -29,6 +29,7 @@ import (
 	"fmt"
 
 	"github.com/caarlos0/env/v8"
+	"github.com/joho/godotenv"
 )
 
 // Config handles our applications configuration
@@ -42,6 +43,9 @@ type Config struct {
 }
 
 func main() {
+	// attempt to load .env file if found
+	_ = godotenv.Load()
+
 	cfg := Config{}
 	if err := env.Parse(&cfg); err != nil {
 		fmt.Printf("%+v\n", err)
@@ -69,6 +73,11 @@ To generate an `.env.example` file similar to:
 # Port is our http listeners port address
 #PORT=3000
 ```
+
+This file should be commited to your source control, and a copy should be created
+locally that is then loaded by your application.
+
+Something similar to `cp .env.example .env` would work.
 
 ### Generate
 You can also use go generate using one of the following styles:
