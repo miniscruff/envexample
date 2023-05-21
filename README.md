@@ -1,4 +1,11 @@
 # EnvExample
+
+[![codecov](https://codecov.io/gh/miniscruff/envexample/branch/main/graph/badge.svg?token=7HT2E32FMB)](https://codecov.io/gh/miniscruff/envexample)
+[![Go Report Card](https://goreportcard.com/badge/github.com/miniscruff/envexample)](https://goreportcard.com/report/github.com/miniscruff/envexample)
+[![Release](https://img.shields.io/github/v/release/miniscruff/envexample?sort=semver)](https://github.com/miniscruff/envexample/releases)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/miniscruff/envexample/test.yml?branch=main)](https://github.com/miniscruff/envexample/actions?query=workflow%3Atest)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/miniscruff/envexample)](https://pkg.go.dev/github.com/miniscruff/envexample)
+
 Generate a `.env.example` from an [env labeled](https://github.com/caarlos0/env) struct
 
 ## Installation
