@@ -5,21 +5,21 @@
 class Envexample < Formula
   desc "Generate a .env.example from an env struct"
   homepage "https://github.com/miniscruff/envexample"
-  version "0.0.0"
+  version "0.1.0"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/miniscruff/envexample/releases/download/v0.0.0/envexample_0.0.0_darwin_arm64.tar.gz"
-      sha256 "ef07a65382572d2c103ef6334bad99f4f270a5c1867072199c603a980a5ebea0"
+      url "https://github.com/miniscruff/envexample/releases/download/v0.1.0/envexample_0.1.0_darwin_arm64.tar.gz"
+      sha256 "1c266e2f2887c640067e940a7aae26dbe6fbc280e230aaf48d506b04c6ef689e"
 
       def install
         bin.install "envexample"
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/miniscruff/envexample/releases/download/v0.0.0/envexample_0.0.0_darwin_amd64.tar.gz"
-      sha256 "3a83df81ea66da4b6c601c49b8fd85101c31e3d34b0f67c8e1044ed6ce147891"
+      url "https://github.com/miniscruff/envexample/releases/download/v0.1.0/envexample_0.1.0_darwin_amd64.tar.gz"
+      sha256 "44256f674ce49b150999ba63b0749f0da0bb224ff4d936b477d226ac3a423e82"
 
       def install
         bin.install "envexample"
@@ -29,16 +29,16 @@ class Envexample < Formula
 
   on_linux do
     if Hardware::CPU.intel?
-      url "https://github.com/miniscruff/envexample/releases/download/v0.0.0/envexample_0.0.0_linux_amd64.tar.gz"
-      sha256 "a4c3bcca042134302439d94f98933dc20ea861fd90d81d08113e12d50ef91272"
+      url "https://github.com/miniscruff/envexample/releases/download/v0.1.0/envexample_0.1.0_linux_amd64.tar.gz"
+      sha256 "bd3414221d40def17bb72e4c549e6c65ee70b288bfbdbfb257209e832a0f40a8"
 
       def install
         bin.install "envexample"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/miniscruff/envexample/releases/download/v0.0.0/envexample_0.0.0_linux_arm64.tar.gz"
-      sha256 "15e41feabcf271f5098a7f6ed01aec24cbd650d4adc836a9c494b06033993485"
+      url "https://github.com/miniscruff/envexample/releases/download/v0.1.0/envexample_0.1.0_linux_arm64.tar.gz"
+      sha256 "466fee484608ce0363f9a0f723d098db6b7fa882444dc80922dd674fb3274c51"
 
       def install
         bin.install "envexample"
