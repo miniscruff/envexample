@@ -28,3 +28,7 @@ custom:
 - key: Issue
   type: int
   minInt: 1
+replacements:
+- path: version.txt
+  find: '^v.*$'
+  replace: '{{.Version}}'
