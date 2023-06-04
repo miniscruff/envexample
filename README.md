@@ -121,7 +121,7 @@ and install with `dpkg -i` and `rpm -i` respectively.
 ### Windows Scoop
 On windows you can use [scoop](https://scoop.sh/) by first adding the repo and then installing.
 ```sh
-scoop bucket add repo https://github.com/miniscruff/envexample
+scoop bucket add envexample https://github.com/miniscruff/envexample
 scoop install envexample
 ```
 
