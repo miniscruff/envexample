@@ -1,12 +1,17 @@
 package pkg
 
 import (
+	"bytes"
+	"context"
+	"encoding/json"
 	"fmt"
 	"go/ast"
+	"go/build"
 	godoc "go/doc"
 	"go/parser"
 	"go/token"
 	"io"
+	"os/exec"
 	"sort"
 	"strings"
 )
