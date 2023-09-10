@@ -23,9 +23,9 @@ type StartingConfig struct {
 	// UnsetVar will unset our environment variable after it is loaded
 	UnsetVar string `env:",unset"`
 
-	// SliceWithDefaultSep loads a slice of values seperated by a comma
+	// SliceWithDefaultSep loads a slice of values separated by a comma
 	SliceWithDefaultSep []string `env:"SLICE_WITH_DEFAULT_SEP,required"`
-	// SliceCustomSep loads a slice of values seperated by a slash
+	// SliceCustomSep loads a slice of values separated by a slash
 	SliceCustomSep []string `env:"SLICE_CUSTOM_SEP,required" envSeperator:"/"`
 
 	// Server loads a separate struct with a prefix

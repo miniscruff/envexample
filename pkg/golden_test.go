@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"io"
 	"os"
-	"path/filepath"
 	"strings"
 	"testing"
 
@@ -19,7 +18,7 @@ type GoldenTest struct {
 func (golden GoldenTest) Run(t *testing.T) {
 	// override config values used by all golden tests
 	cfg := golden.Config
-	cfg.Directory = "testdata"
+	cfg.Directory = "."
 	cfg.Version = "dev"
 
 	var writer bytes.Buffer
@@ -30,7 +29,7 @@ func (golden GoldenTest) Run(t *testing.T) {
 	err = gen.Run(&writer)
 	then.Nil(t, err)
 
-	fullPath := filepath.Join("testdata", golden.GoldenFile+".golden.env")
+	fullPath := golden.GoldenFile + ".golden.env"
 	overrideKey := "GOLDEN_" + strings.ToUpper(golden.GoldenFile)
 
 	shouldOverride := os.Getenv(overrideKey)
@@ -68,13 +67,13 @@ func (golden GoldenTest) Run(t *testing.T) {
 }
 
 func TestGoldens(t *testing.T) {
-	then.RunFromDir(t, "..")
+	then.RunFromDir(t, "../testdata")
 
 	for _, golden := range []GoldenTest{
 		{
 			GoldenFile: "example",
 			Config: &Config{
-				ConfigStruct: "Config",
+				ConfigStruct: "ExampleConfig",
 				TagName:      "env",
 				Prefix:       "",
 			},
@@ -83,6 +82,14 @@ func TestGoldens(t *testing.T) {
 			GoldenFile: "starting",
 			Config: &Config{
 				ConfigStruct: "StartingConfig",
+				TagName:      "env",
+				Prefix:       "",
+			},
+		},
+		{
+			GoldenFile: "nested",
+			Config: &Config{
+				ConfigStruct: "NestedConfig",
 				TagName:      "env",
 				Prefix:       "",
 			},
