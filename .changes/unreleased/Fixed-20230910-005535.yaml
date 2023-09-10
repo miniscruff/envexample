@@ -1,0 +1,5 @@
+kind: Fixed
+body: Using an external struct not loading fields properly
+time: 2023-09-10T00:55:35.932696768-07:00
+custom:
+  Issue: "19"
