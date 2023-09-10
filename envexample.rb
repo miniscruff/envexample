@@ -5,21 +5,21 @@
 class Envexample < Formula
   desc "Generate a .env.example from an env struct"
   homepage "https://github.com/miniscruff/envexample"
-  version "0.1.0"
+  version "0.1.1"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/miniscruff/envexample/releases/download/v0.1.0/envexample_0.1.0_darwin_arm64.tar.gz"
-      sha256 "1c266e2f2887c640067e940a7aae26dbe6fbc280e230aaf48d506b04c6ef689e"
+      url "https://github.com/miniscruff/envexample/releases/download/v0.1.1/envexample_0.1.1_darwin_arm64.tar.gz"
+      sha256 "b3c632d46f075cf6f2e300bdba42624974cc19e6b72ac671d6592186a9869e34"
 
       def install
         bin.install "envexample"
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/miniscruff/envexample/releases/download/v0.1.0/envexample_0.1.0_darwin_amd64.tar.gz"
-      sha256 "44256f674ce49b150999ba63b0749f0da0bb224ff4d936b477d226ac3a423e82"
+      url "https://github.com/miniscruff/envexample/releases/download/v0.1.1/envexample_0.1.1_darwin_amd64.tar.gz"
+      sha256 "60c93e27f6bf77060f5c169af27594abb59a943252b31ce096a8be11ee211410"
 
       def install
         bin.install "envexample"
@@ -28,17 +28,17 @@ class Envexample < Formula
   end
 
   on_linux do
-    if Hardware::CPU.intel?
-      url "https://github.com/miniscruff/envexample/releases/download/v0.1.0/envexample_0.1.0_linux_amd64.tar.gz"
-      sha256 "bd3414221d40def17bb72e4c549e6c65ee70b288bfbdbfb257209e832a0f40a8"
+    if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
+      url "https://github.com/miniscruff/envexample/releases/download/v0.1.1/envexample_0.1.1_linux_arm64.tar.gz"
+      sha256 "48a5664f849fe7d2c005cb4881f1bb44ff6c3716d34bf79ee9e7c953671aae90"
 
       def install
         bin.install "envexample"
       end
     end
-    if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/miniscruff/envexample/releases/download/v0.1.0/envexample_0.1.0_linux_arm64.tar.gz"
-      sha256 "466fee484608ce0363f9a0f723d098db6b7fa882444dc80922dd674fb3274c51"
+    if Hardware::CPU.intel?
+      url "https://github.com/miniscruff/envexample/releases/download/v0.1.1/envexample_0.1.1_linux_amd64.tar.gz"
+      sha256 "288109c9965ed3e177f79890725d6b1485b561103b29728c95c13bdc827870b2"
 
       def install
         bin.install "envexample"
