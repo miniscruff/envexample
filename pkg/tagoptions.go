@@ -1,7 +1,6 @@
 package pkg
 
 import (
-	"go/ast"
 	"reflect"
 	"strings"
 )
@@ -22,32 +21,23 @@ type EnvTagOptions struct {
 	Prefix   string
 }
 
-func NewEnvTagOptions(name string, gen *Generator, field *ast.Field) *EnvTagOptions {
+func NewEnvTagOptions(name string, gen *Generator, isSlice bool, tag string) *EnvTagOptions {
 	opts := &EnvTagOptions{
 		Key:            name,
 		SliceSeperator: ",",
 		Required:       gen.RequiredIfNoDef,
+		IsSlice:        isSlice,
 	}
 
 	if gen.UseFieldNameByDefault {
 		opts.Key = toEnvName(name)
 	}
 
-	switch fieldType := field.Type.(type) {
-	case *ast.ArrayType:
-		opts.IsSlice = true
-		rootType := fieldType.Elt.(*ast.Ident)
-		opts.TypeName = rootType.Name
-	case *ast.Ident:
-		opts.TypeName = fieldType.Name
-	}
-
-	structTag := field.Tag
-	if structTag == nil {
+	if tag == "" {
 		return opts
 	}
 
-	structTags := reflect.StructTag(strings.Trim(structTag.Value, "`"))
+	structTags := reflect.StructTag(tag)
 
 	optValues := strings.Split(structTags.Get(gen.TagName), ",")
 	if optValues[0] != "" {

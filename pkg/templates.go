@@ -18,8 +18,6 @@ var (
 	errUnableToParseFlags    = errors.New("unable to parse cli flags")
 	errUnableToCreateWriter  = errors.New("unable to create writer")
 	errUnableToWrite         = errors.New("unable to write")
-	errUnableToFindPackage   = errors.New("unable to find go package")
-	errUnableToBuildPackages = errors.New("unable to build go packages")
 )
 
 const underscore rune = '_'

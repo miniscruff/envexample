@@ -1,52 +1,26 @@
 package pkg
 
 import (
-	"bytes"
-	"context"
-	"encoding/json"
 	"fmt"
-	"go/ast"
-	"go/build"
-	godoc "go/doc"
-	"go/parser"
-	"go/token"
 	"io"
-	"os/exec"
 	"sort"
-	"strings"
+
+	"k8s.io/gengo/namer"
+	"k8s.io/gengo/parser"
+	"k8s.io/gengo/types"
 )
 
-type PackageTypes map[string]*godoc.Type
-
-func NewPackageTypes(directory string) (PackageTypes, error) {
-	fset := token.NewFileSet()
-	packages, _ := parser.ParseDir(fset, "./"+directory, nil, parser.ParseComments)
-
-	projectPackage, ok := packages[directory]
-	if !ok {
-		return nil, fmt.Errorf("%w: '%v'", errUnableToFindPackage, directory)
-	}
-
-	p := godoc.New(projectPackage, "./", 0)
-
-	projectPackages := make(PackageTypes)
-	for _, t := range p.Types {
-		projectPackages[t.Name] = t
-	}
-
-	return projectPackages, nil
-}
-
 type StructQueueEntry struct {
-	TypeName  string
-	FieldDocs string
+	TypeName  types.Name
+	FieldDocs []string
 	Prefix    string
 }
 
 type Generator struct {
-	packageTypes PackageTypes
-	queue        []*StructQueueEntry
-	version      string
+	queue    []*StructQueueEntry
+	version  string
+	builder  *parser.Builder
+	universe types.Universe
 
 	RequiredIfNoDef       bool
 	UseFieldNameByDefault bool
@@ -54,18 +28,29 @@ type Generator struct {
 }
 
 func NewGenerator(cfg *Config) (*Generator, error) {
-	pkgTypes, err := NewPackageTypes(cfg.Directory)
+	builder := parser.New()
+
+	err := builder.AddDirRecursive(".")
 	if err != nil {
-		return nil, fmt.Errorf("%w: %w", errUnableToBuildPackages, err)
+		return nil, fmt.Errorf("finding package directory: %w", err)
+	}
+
+	uni, err := builder.FindTypes()
+	if err != nil {
+		return nil, fmt.Errorf("finding package types: %w", err)
 	}
 
 	return &Generator{
-		version:      cfg.Version,
-		packageTypes: pkgTypes,
+		version:  cfg.Version,
+		builder:  builder,
+		universe: uni,
 		queue: []*StructQueueEntry{
 			{
-				TypeName: cfg.ConfigStruct,
-				Prefix:   cfg.Prefix,
+				TypeName: types.Name{
+					Package: cfg.Directory,
+					Name:    cfg.ConfigStruct,
+				},
+				Prefix: cfg.Prefix,
 			},
 		},
 		RequiredIfNoDef:       cfg.RequiredIfNoDef,
@@ -75,48 +60,34 @@ func NewGenerator(cfg *Config) (*Generator, error) {
 }
 
 func (g *Generator) WriteStruct(writer io.Writer, entry *StructQueueEntry) {
-	docType := g.packageTypes[entry.TypeName]
+	docType := g.universe.Type(entry.TypeName)
 
-	if entry.FieldDocs != "" {
-		_, _ = writer.Write([]byte("# "))
-		_, _ = writer.Write([]byte(strings.Replace(strings.Trim(entry.FieldDocs, "\n"), "\n", "\n# ", -1)))
-		_, _ = writer.Write([]byte("\n#\n"))
-	}
+	writeLines(writer, entry.FieldDocs, "# ", "#\n")
+	writeLines(writer, docType.CommentLines, "# ", "#\n")
 
-	if docType.Doc != "" {
-		_, _ = writer.Write([]byte("# "))
-		_, _ = writer.Write([]byte(strings.Replace(strings.Trim(docType.Doc, "\n"), "\n", "\n# ", -1)))
-		_, _ = writer.Write([]byte("\n#\n"))
-	}
-
-	fields := make([]*ast.Field, 0)
-
-	specs := docType.Decl.Specs
-	for _, spec := range specs {
-		// can't remember when either of these will fail
-		typeSpec, _ := spec.(*ast.TypeSpec)
-		structType, _ := typeSpec.Type.(*ast.StructType)
-
-		fields = append(fields, structType.Fields.List...)
-	}
-
-	sort.SliceStable(fields, func(i, j int) bool {
-		return fields[i].Names[0].Name < fields[j].Names[0].Name
+	membs := docType.Members
+	sort.Slice(membs, func(i, j int) bool {
+		return membs[i].Name < membs[j].Name
 	})
 
-	for _, field := range fields {
+	for _, field := range membs {
 		g.WriteField(writer, field, entry.Prefix)
 	}
 
 	_, _ = writer.Write([]byte("\n"))
 }
 
-func (g *Generator) WriteField(writer io.Writer, field *ast.Field, prefix string) {
-	opts := NewEnvTagOptions(field.Names[0].Name, g, field)
-	if _, found := g.packageTypes[opts.TypeName]; found {
+func (g *Generator) WriteField(writer io.Writer, field types.Member, prefix string) {
+	if namer.IsPrivateGoName(field.Name) {
+		return
+	}
+
+	opts := NewEnvTagOptions(field.Name, g, field.Type.Kind == types.Slice, field.Tags)
+
+	if len(field.Type.Members) > 0 {
 		g.queue = append(g.queue, &StructQueueEntry{
-			TypeName:  opts.TypeName,
-			FieldDocs: field.Doc.Text(),
+			TypeName:  field.Type.Name,
+			FieldDocs: field.CommentLines,
 			Prefix:    prefix + opts.Prefix,
 		})
 
@@ -124,11 +95,7 @@ func (g *Generator) WriteField(writer io.Writer, field *ast.Field, prefix string
 		return
 	}
 
-	if field.Doc.Text() != "" {
-		_, _ = writer.Write([]byte("# "))
-		_, _ = writer.Write([]byte(strings.Replace(strings.Trim(field.Doc.Text(), "\n"), "\n", "\n# ", -1)))
-		_, _ = writer.Write([]byte("\n"))
-	}
+	writeLines(writer, field.CommentLines, "# ", "")
 
 	if opts.LoadFile {
 		_, _ = writer.Write([]byte(helpFile))
@@ -171,4 +138,20 @@ func (g *Generator) Run(writer io.Writer) error {
 	}
 
 	return nil
+}
+
+func writeLines(w io.Writer, lines []string, prefix, ender string) {
+	if len(lines) == 0 || (len(lines) == 1 && lines[0] == "") {
+		return
+	}
+
+	for _, line := range lines {
+		if line == "" {
+			continue
+		}
+
+		_, _ = w.Write([]byte(prefix + line + "\n"))
+	}
+
+	_, _ = w.Write([]byte(ender))
 }

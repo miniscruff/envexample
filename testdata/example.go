@@ -1,7 +1,7 @@
 package testdata
 
-// Config handles our applications configuration
-type Config struct {
+// ExampleConfig handles our applications configuration
+type ExampleConfig struct {
 	// Home is our users home directory
 	Home string `env:"HOME"`
 	// Port is our http listeners port address
