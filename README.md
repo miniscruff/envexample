@@ -30,7 +30,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/caarlos0/env/v8"
+	"github.com/caarlos0/env/v9"
 	"github.com/joho/godotenv"
 )
 
