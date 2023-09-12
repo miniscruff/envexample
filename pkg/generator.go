@@ -30,7 +30,7 @@ type Generator struct {
 func NewGenerator(cfg *Config) (*Generator, error) {
 	builder := parser.New()
 
-	err := builder.AddDirRecursive(".")
+	err := builder.AddDirRecursive(cfg.Package)
 	if err != nil {
 		return nil, fmt.Errorf("finding package directory: %w", err)
 	}
@@ -47,7 +47,7 @@ func NewGenerator(cfg *Config) (*Generator, error) {
 		queue: []*StructQueueEntry{
 			{
 				TypeName: types.Name{
-					Package: cfg.Directory,
+					Package: cfg.Package,
 					Name:    cfg.ConfigStruct,
 				},
 				Prefix: cfg.Prefix,

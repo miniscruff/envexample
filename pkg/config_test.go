@@ -18,7 +18,7 @@ func Test_Config_Defaults(t *testing.T) {
 	then.Nil(t, err)
 	then.Equals(t, ".env.example", cfg.ExportFile)
 	then.Equals(t, "", cfg.ConfigStruct)
-	then.Equals(t, ".", cfg.Directory)
+	then.Equals(t, "", cfg.Package)
 	then.False(t, cfg.DryRun)
 	then.False(t, cfg.ShowVersion)
 	then.False(t, cfg.ShowHelp)
@@ -28,7 +28,7 @@ func Test_Config_OverrideDefaults(t *testing.T) {
 	args := []string{
 		"-export", "test.env.example",
 		"-type", "myStruct",
-		"-dir", "config",
+		"-pkg", "github.com/your/project/config",
 		"-prefix", "C_",
 		"-tag", "cenv",
 		"-required-if-no-def",
@@ -40,7 +40,7 @@ func Test_Config_OverrideDefaults(t *testing.T) {
 	then.Nil(t, err)
 	then.Equals(t, "test.env.example", cfg.ExportFile)
 	then.Equals(t, "myStruct", cfg.ConfigStruct)
-	then.Equals(t, "config", cfg.Directory)
+	then.Equals(t, "github.com/your/project/config", cfg.Package)
 	then.Equals(t, "cenv", cfg.TagName)
 	then.Equals(t, "C_", cfg.Prefix)
 	then.True(t, cfg.DryRun)
@@ -53,7 +53,7 @@ func Test_Config_OverrideDefaults(t *testing.T) {
 func Test_Config_ValidArgs(t *testing.T) {
 	args := []string{
 		"-type", "MyConfig",
-		"-dir", "config",
+		"-pkg", "github.com/your/project/config",
 	}
 
 	cfg, err := NewConfig(args)
