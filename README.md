@@ -18,6 +18,8 @@ go install github.com/miniscruff/envexample@v0.1.0
 
 [All Installation Options](#all-installation-options) has the full list of options.
 
+[CLI Arguments](./DOCS.md) has all the arguments.
+
 ## Usage
 Given a configuration struct and using [env](https://github.com/caarlos0/env)
 to parse environment variables like:
@@ -79,39 +81,6 @@ locally that is then loaded by your application.
 
 Something similar to `cp .env.example .env` would work.
 
-### Generate
-You can also use go generate using one of the following styles:
-```
-// directly run latest
-//go:generate go run github.com/miniscruff/envexample@latest -struct Config
-// with a specific version
-//go:generate go run github.com/miniscruff/envexample@v0.1.0 -struct Config
-// with our installed version
-//go:generate envexample -struct Config
-```
-
-## CLI Arguments
-```
--dir directory
-    directory our config struct is located in (default ".")
--dry
-    output to stdout instead of writing to file
--export filepath
-    filepath to export generated example to (default ".env.example")
--h    show help
--prefix string
-    prefix config when parsing in env
--required-if-no-def
-    required if no default config when parsing in env
--tag string
-    tag name config when parsing in env (default "env")
--type struct
-    struct to build example from
--use-field-name
-    use field name by default config when parsing in env
--v    show version
-```
-
 ## All Installation Options
 
 ### deb/rpm
@@ -168,6 +137,17 @@ go tool cover -html=c.out
 ```
 goimports -w -local github.com/miniscruff/envexample .
 golangci-lint run ./...
+```
+
+### release
+Run generation and prepare a release PR
+requires: test,lint
+```
+go run main.go -h > DOCS.md
+changie batch auto
+changie merge
+git checkout --branch release-$(changie latest)
+gh pr create
 ```
 
 ## License

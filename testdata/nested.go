@@ -1,8 +1,8 @@
 package testdata
 
 import (
-    "github.com/miniscruff/envexample/testdata/a"
-    "github.com/miniscruff/envexample/testdata/b"
+	"github.com/miniscruff/envexample/testdata/a"
+	"github.com/miniscruff/envexample/testdata/b"
 )
 
 // Nested checks whether we can import packages outside our local.
