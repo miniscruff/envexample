@@ -18,7 +18,7 @@ type GoldenTest struct {
 func (golden GoldenTest) Run(t *testing.T) {
 	// override config values used by all golden tests
 	cfg := golden.Config
-	cfg.Directory = "."
+	cfg.Package = "github.com/miniscruff/envexample/testdata"
 	cfg.Version = "dev"
 
 	var writer bytes.Buffer

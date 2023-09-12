@@ -1,0 +1,5 @@
+kind: Fixed
+body: Switch to import package path instead of local directory
+time: 2023-09-11T19:28:36.375283573-07:00
+custom:
+  Issue: "30"
