@@ -16,29 +16,24 @@ jobs:
 
   build:
     name: Build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
 
     - name: Setup Go
       uses: actions/setup-go@v5
       with:
-        go-version: '1.20'
+        go-version: '1.23'
 
     - name: Check out code
       uses: actions/checkout@v4
 
     - name: golangci-lint
-      uses: golangci/golangci-lint-action@v4
+      uses: golangci/golangci-lint-action@v7
       with:
         # Required: the version of golangci-lint is required and must be specified
         # without patch version: we always use the latest patch version.
-        version: 'v1.52'
+        version: 'v2.0'
 
     - name: Test
       run: go test -coverprofile=c.out ./...
 
-    - name: Coverage
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./c.out
-        fail_ci_if_error: true

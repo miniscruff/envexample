@@ -106,22 +106,21 @@ func (g *Generator) WriteField(writer io.Writer, field types.Member, prefix stri
 	}
 
 	if opts.IsSlice {
-		_, _ = writer.Write([]byte(fmt.Sprintf(helpSlice, opts.SliceSeperator)))
+		_, _ = fmt.Fprintf(writer, helpSlice, opts.SliceSeperator)
 	}
 
-	_, _ = writer.Write([]byte(fmt.Sprintf(
+	_, _ = fmt.Fprintf(writer,
 		"%s%s%s=%s",
 		opts.LinePrefix(),
 		prefix,
 		opts.Key,
-		opts.DefaultValue(),
-	)))
+		opts.DefaultValue())
 
 	_, _ = writer.Write([]byte("\n"))
 }
 
 func (g *Generator) Run(writer io.Writer) error {
-	_, err := writer.Write([]byte(fmt.Sprintf(header, g.version)))
+	_, err := fmt.Fprintf(writer, header, g.version)
 	if err != nil {
 		return fmt.Errorf("%w: %w", errUnableToWrite, err)
 	}
