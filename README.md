@@ -116,39 +116,5 @@ go install github.com/miniscruff/envexample@latest
 go install github.com/miniscruff/envexample@v0.1.0
 ```
 
-## Tasks
-Below is a list of common development tasks, these can easily be run using [xc](https://xcfile.dev/).
-For example `xc test` will run the test suite.
-
-### test
-Run unit test suite with code coverage enabled.
-```
-go test ./... -coverprofile=c.out
-```
-
-### coverage
-Run unit tests and preview the html coverage results.
-requires: test
-```
-go tool cover -html=c.out
-```
-
-### lint
-```
-goimports -w -local github.com/miniscruff/envexample .
-golangci-lint run ./...
-```
-
-### release
-Run generation and prepare a release PR
-requires: test,lint
-```
-go run main.go -h > DOCS.md
-changie batch auto
-changie merge
-git checkout --branch release-$(changie latest)
-gh pr create
-```
-
 ## License
 Distributed under the [MIT License](LICENSE).
