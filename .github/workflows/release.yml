@@ -36,7 +36,7 @@ jobs:
       uses: goreleaser/goreleaser-action@v7.0.0
       with:
         version: latest
-        args: --release-notes=.changes/${{ steps.latest.outputs.output }}.md --skip-validate --debug
+        args: --release-notes=.changes/${{ steps.latest.outputs.output }}.md --skip=validate
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
