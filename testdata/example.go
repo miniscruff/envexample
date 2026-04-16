@@ -8,4 +8,6 @@ type ExampleConfig struct {
 	Port int `env:"PORT" envDefault:"3000"`
 	// IsProduction is whether or not we are running in production
 	IsProduction bool `env:"PRODUCTION"`
+	// IgnoredKey is ignored cause it has a dash as the env key
+	IgnoredKey string `env:"-"`
 }

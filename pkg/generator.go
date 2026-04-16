@@ -95,6 +95,11 @@ func (g *Generator) WriteField(writer io.Writer, field types.Member, prefix stri
 		return
 	}
 
+	// ignore fields that are defaulted to a dash
+	if opts.Key == "-" {
+		return
+	}
+
 	writeLines(writer, field.CommentLines, "# ", "")
 
 	if opts.LoadFile {
