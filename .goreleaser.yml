@@ -1,3 +1,6 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# Make sure to check the documentation at http://goreleaser.com
+version: 2
 before:
   hooks:
     - go mod download
@@ -9,15 +12,15 @@ builds:
       - windows
       - darwin
     goarch:
-      - 386
+      - "386"
       - amd64
       - arm64
 archives:
   - format_overrides:
     - goos: windows
-      format: zip
+      formats: ["zip"]
 release:
-  github:
+  github: {}
   prerelease: auto
 nfpms:
   - homepage: https://github.com/miniscruff/envexample
@@ -28,7 +31,7 @@ nfpms:
     - deb
     - rpm
 brews:
-  - tap:
+  - repository:
       owner: miniscruff
       name: envexample
     homepage: https://github.com/miniscruff/envexample
@@ -36,7 +39,7 @@ brews:
     license: MIT
     skip_upload: auto
 scoops:
-  - bucket:
+  - repository:
       owner: miniscruff
       name: envexample
     commit_msg_template: "Scoop update for {{ .ProjectName }} version {{ .Tag }}"

@@ -19,11 +19,11 @@ jobs:
     - name: Setup Go
       uses: actions/setup-go@v6
       with:
-        go-version: '1.23'
+        go-version-file: 'go.mod'
 
     - name: Get the latest version
       id: latest
-      uses: miniscruff/changie-action@v2
+      uses: miniscruff/changie-action@v3
       with:
         version: latest
         args: latest
@@ -36,7 +36,7 @@ jobs:
       uses: goreleaser/goreleaser-action@v7.0.0
       with:
         version: latest
-        args: --rm-dist --release-notes=.changes/${{ steps.latest.outputs.output }}.md --skip-validate --debug
+        args: --release-notes=.changes/${{ steps.latest.outputs.output }}.md --skip-validate --debug
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
