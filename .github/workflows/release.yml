@@ -33,7 +33,7 @@ jobs:
         echo GORELEASER_CURRENT_TAG=${{ steps.latest.outputs.output }} >> $GITHUB_ENV
 
     - name: Run GoReleaser
-      uses: goreleaser/goreleaser-action@v6.4.0
+      uses: goreleaser/goreleaser-action@v7.2.1
       with:
         version: latest
         args: --release-notes=".changes/${{ steps.latest.outputs.output }}.md" --skip=validate
