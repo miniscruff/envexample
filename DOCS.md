@@ -4,7 +4,7 @@
     	filepath to export generated example to (default ".env.example")
   -h	show help
   -pkg string
-    	import package our config struct is located in
+    	import path or relative path of the package our config struct is located in (default ".")
   -prefix string
     	prefix config when parsing in env
   -required-if-no-def
