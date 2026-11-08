@@ -1,0 +1,5 @@
+kind: Changed
+body: Modernize to Go 1.26 and gengo v2, so installing envexample now requires Go 1.26 or newer
+time: 2026-11-07T22:36:18.740443977-08:00
+custom:
+    Issue: "72"
