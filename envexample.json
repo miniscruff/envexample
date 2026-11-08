@@ -25,5 +25,6 @@
     },
     "homepage": "https://github.com/miniscruff/envexample",
     "license": "MIT",
-    "description": "Generate a .env.example from an env struct"
+    "description": "Generate a .env.example from an env struct",
+    "notes": "envexample is no longer published with scoop and stays on v0.3.1. Install it in your Go project with: go get -tool github.com/miniscruff/envexample@latest"
 }

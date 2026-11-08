@@ -9,12 +9,14 @@
 Generate a `.env.example` from an [env labeled](https://github.com/caarlos0/env) struct
 
 ## Installation
-The easiest way to install `envexample` is using `go install` from latest or by version.
+The recommended way to install `envexample` is as a [tool](https://go.dev/doc/modules/managing-dependencies#tools)
+of your project, which pins its version in your `go.mod`.
 
 ```sh
-go install github.com/miniscruff/envexample@latest
-go install github.com/miniscruff/envexample@v0.1.0
+go get -tool github.com/miniscruff/envexample@latest
 ```
+
+It can then be run with `go tool envexample`.
 
 [All Installation Options](#all-installation-options) has the full list of options.
 
@@ -57,10 +59,18 @@ func main() {
 }
 ```
 
-You can run `envexample` like:
+You can run `envexample` from the package of your config struct like:
 ```sh
-envexample -struct Config
+go tool envexample -type Config
 ```
+
+Or generate it with `go generate` by adding a comment next to your config struct:
+```go
+//go:generate go tool envexample -type Config
+```
+
+Use `-pkg` when running from somewhere else, with a relative path such as
+`./config` or an import path.
 
 To generate an `.env.example` file similar to:
 ```sh
@@ -83,38 +93,25 @@ Something similar to `cp .env.example .env` would work.
 
 ## All Installation Options
 
-### deb/rpm
-Download a `.deb` or `.rpm` file from the [releases page](https://github.com/miniscruff/envexample/releases)
-and install with `dpkg -i` and `rpm -i` respectively.
-
-### Windows Scoop
-On windows you can use [scoop](https://scoop.sh/) by first adding the repo and then installing.
-```sh
-scoop bucket add envexample https://github.com/miniscruff/envexample
-scoop install envexample
-```
-
-### macOS with Homebrew
-
-On macOS, you can use [Homebrew](https://brew.sh/) to install by first tapping
-the repository.
+### Go tool
+Recommended, as it pins the version in your project's `go.mod`.
 
 ```sh
-brew tap miniscruff/envexample https://github.com/miniscruff/envexample
-brew install envexample
+go get -tool github.com/miniscruff/envexample@latest
 ```
 
-### Manual
-* Download from [here](https://github.com/miniscruff/envexample/releases).
-* Add executable somewhere in your path depending on your platform.
+### Go install
+To install `envexample` outside of a project, use `go install` from latest or by version.
 
-### From source
-Go install can be used to download envexample from the main branch or by tag.
-
-```
+```sh
 go install github.com/miniscruff/envexample@latest
-go install github.com/miniscruff/envexample@v0.1.0
+go install github.com/miniscruff/envexample@v0.4.0
 ```
+
+### Homebrew, Scoop and prebuilt binaries
+envexample only runs inside Go projects, so it is no longer published as prebuilt
+binaries, deb/rpm packages, or with Homebrew and Scoop. Existing Homebrew and Scoop
+installs stay on v0.3.1, use `go get -tool` or `go install` instead.
 
 ## License
 Distributed under the [MIT License](LICENSE).
