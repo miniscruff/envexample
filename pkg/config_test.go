@@ -18,7 +18,7 @@ func Test_Config_Defaults(t *testing.T) {
 	then.Nil(t, err)
 	then.Equals(t, ".env.example", cfg.ExportFile)
 	then.Equals(t, "", cfg.ConfigStruct)
-	then.Equals(t, "", cfg.Package)
+	then.Equals(t, ".", cfg.Package)
 	then.False(t, cfg.DryRun)
 	then.False(t, cfg.ShowVersion)
 	then.False(t, cfg.ShowHelp)

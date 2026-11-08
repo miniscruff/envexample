@@ -18,6 +18,8 @@ var (
 	errUnableToParseFlags    = errors.New("unable to parse cli flags")
 	errUnableToCreateWriter  = errors.New("unable to create writer")
 	errUnableToWrite         = errors.New("unable to write")
+	errNotOnePackage         = errors.New("package must match exactly one package")
+	errStructNotFound        = errors.New("config struct not found")
 )
 
 const underscore rune = '_'
