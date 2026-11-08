@@ -1,5 +1,0 @@
-kind: Fixed
-body: A config struct that is not found is now an error instead of an empty example
-time: 2026-11-07T22:59:52.6139587-08:00
-custom:
-    Issue: "74"

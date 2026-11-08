@@ -1,5 +1,0 @@
-kind: Fixed
-body: Relative `-pkg` paths such as `.` write the full example again, instead of only the header
-time: 2026-11-07T22:59:51.605319315-08:00
-custom:
-    Issue: "74"

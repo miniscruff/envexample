@@ -1,0 +1,5 @@
+kind: Fixed
+body: Relative `-pkg` paths such as `.`, now the default, write the full example again, and a config struct that is not found is an error instead of an empty example
+time: 2026-11-07T23:04:31.114765732-08:00
+custom:
+    Issue: "74"
