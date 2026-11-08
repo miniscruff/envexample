@@ -4,11 +4,29 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"runtime/debug"
+	"strings"
 
 	"github.com/miniscruff/envexample/pkg"
 )
 
 var version = "dev" // injected by goreleaser
+
+// buildVersion returns the version injected by goreleaser, or for builds
+// using go install or go tool, the module version recorded by Go.
+func buildVersion() string {
+	if version != "dev" {
+		return version
+	}
+
+	info, ok := debug.ReadBuildInfo()
+	if !ok || info.Main.Version == "" || info.Main.Version == "(devel)" {
+		return version
+	}
+
+	// match the goreleaser version, which has no v prefix
+	return strings.TrimPrefix(info.Main.Version, "v")
+}
 
 func main() {
 	cfg, err := pkg.NewConfig(os.Args[1:])
@@ -17,7 +35,7 @@ func main() {
 	}
 
 	if cfg.ShowVersion {
-		fmt.Println(version)
+		fmt.Println(buildVersion())
 		os.Exit(0)
 	}
 
@@ -37,7 +55,7 @@ func main() {
 
 	defer writer.Close()
 
-	cfg.Version = version
+	cfg.Version = buildVersion()
 
 	gen, err := pkg.NewGenerator(cfg)
 	if err != nil {
