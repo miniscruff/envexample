@@ -10,21 +10,14 @@ import (
 	"github.com/miniscruff/envexample/pkg"
 )
 
-var version = "dev" // injected by goreleaser
-
-// buildVersion returns the version injected by goreleaser, or for builds
-// using go install or go tool, the module version recorded by Go.
+// buildVersion returns the module version Go records in the binary when
+// installed with go install or go tool, or dev for local builds.
 func buildVersion() string {
-	if version != "dev" {
-		return version
-	}
-
 	info, ok := debug.ReadBuildInfo()
 	if !ok || info.Main.Version == "" || info.Main.Version == "(devel)" {
-		return version
+		return "dev"
 	}
 
-	// match the goreleaser version, which has no v prefix
 	return strings.TrimPrefix(info.Main.Version, "v")
 }
 

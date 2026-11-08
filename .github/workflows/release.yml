@@ -16,11 +16,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v7
 
-    - name: Setup Go
-      uses: actions/setup-go@v7
-      with:
-        go-version-file: 'go.mod'
-
     - name: Get the latest version
       id: latest
       uses: miniscruff/changie-action@v3
@@ -28,15 +23,9 @@ jobs:
         version: latest
         args: latest
 
-    - name: Add env vars
-      run: |
-        echo GORELEASER_CURRENT_TAG=${{ steps.latest.outputs.output }} >> $GITHUB_ENV
-
-    - name: Run GoReleaser
-      uses: goreleaser/goreleaser-action@v7.2.3
-      with:
-        version: v2.20.0
-        args: --release-notes=".changes/${{ steps.latest.outputs.output }}.md" --skip=validate
+    # go get -tool and go install only need the tag, Go builds envexample
+    - name: Create the release
+      run: gh release create "$TAG" --title "$TAG" --notes-file ".changes/$TAG.md" --target "$GITHUB_SHA"
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TAG: ${{ steps.latest.outputs.output }}
