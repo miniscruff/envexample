@@ -5,21 +5,21 @@
 class Envexample < Formula
   desc "Generate a .env.example from an env struct"
   homepage "https://github.com/miniscruff/envexample"
-  version "0.3.0"
+  version "0.3.1"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/miniscruff/envexample/releases/download/v0.3.0/envexample_0.3.0_darwin_amd64.tar.gz"
-      sha256 "04a61ae39fac11f7fbe33499cb11f8aca1a1f52332282341a31d46479c40d91c"
+      url "https://github.com/miniscruff/envexample/releases/download/v0.3.1/envexample_0.3.1_darwin_amd64.tar.gz"
+      sha256 "d9c8ee06beeec788b6c9aea85a5fb384c9588548837c3fda0e5d88bd9de1609e"
 
       define_method(:install) do
         bin.install "envexample"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/miniscruff/envexample/releases/download/v0.3.0/envexample_0.3.0_darwin_arm64.tar.gz"
-      sha256 "b78f61bc27282ee2de9130c56d56f883d03217373e9a77a55bb7f02dcd0ae2a8"
+      url "https://github.com/miniscruff/envexample/releases/download/v0.3.1/envexample_0.3.1_darwin_arm64.tar.gz"
+      sha256 "1fc010261c422bb51b8608180e4f07b6412b68dcd348b1a7e145754ad8e907f5"
 
       define_method(:install) do
         bin.install "envexample"
@@ -29,15 +29,15 @@ class Envexample < Formula
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/miniscruff/envexample/releases/download/v0.3.0/envexample_0.3.0_linux_amd64.tar.gz"
-      sha256 "23ef212ebb94b4ba54e32dc1513c4f2b031faa4527085fc288413235793f80db"
+      url "https://github.com/miniscruff/envexample/releases/download/v0.3.1/envexample_0.3.1_linux_amd64.tar.gz"
+      sha256 "e26168092876d5abe004638548ceb0bb173b8c1ce041acd3d0bb6cd0ef3d7b3c"
       define_method(:install) do
         bin.install "envexample"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/miniscruff/envexample/releases/download/v0.3.0/envexample_0.3.0_linux_arm64.tar.gz"
-      sha256 "064c8f1425027f5835f7129c6ae3475b7cb3497c62be4fae4e486e678712ee46"
+      url "https://github.com/miniscruff/envexample/releases/download/v0.3.1/envexample_0.3.1_linux_arm64.tar.gz"
+      sha256 "7bdccc4d53ad999deb45e461b2150ed543fd856b6642995232c6709042517d2d"
       define_method(:install) do
         bin.install "envexample"
       end
