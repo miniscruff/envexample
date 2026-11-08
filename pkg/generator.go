@@ -142,6 +142,11 @@ func (g *Generator) WriteField(writer io.Writer, field types.Member, prefix stri
 
 	opts := NewEnvTagOptions(field.Name, g, field.Type.Kind == types.Slice, field.Tags)
 
+	// ignore fields, including nested structs, with a dash as the env key
+	if opts.Key == "-" {
+		return
+	}
+
 	if len(field.Type.Members) > 0 {
 		g.queue = append(g.queue, &StructQueueEntry{
 			TypeName:  field.Type.Name,
@@ -150,11 +155,6 @@ func (g *Generator) WriteField(writer io.Writer, field types.Member, prefix stri
 		})
 
 		// write our nested struct later
-		return
-	}
-
-	// ignore fields that are defaulted to a dash
-	if opts.Key == "-" {
 		return
 	}
 

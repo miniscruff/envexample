@@ -95,6 +95,13 @@ func TestGoldens(t *testing.T) {
 			},
 		},
 		{
+			GoldenFile: "ignored",
+			Config: &Config{
+				ConfigStruct: "IgnoredConfig",
+				TagName:      "env",
+			},
+		},
+		{
 			GoldenFile: "configs_enabled",
 			Config: &Config{
 				ConfigStruct:          "EnvConfigsEnabled",
