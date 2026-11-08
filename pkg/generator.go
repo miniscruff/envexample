@@ -28,14 +28,23 @@ type Generator struct {
 }
 
 func NewGenerator(cfg *Config) (*Generator, error) {
+	pkg, err := importPath(cfg.Package)
+	if err != nil {
+		return nil, err
+	}
+
 	root := types.Name{
-		Package: cfg.Package,
+		Package: pkg,
 		Name:    cfg.ConfigStruct,
 	}
 
 	uni, err := loadUniverse(root)
 	if err != nil {
 		return nil, err
+	}
+
+	if uni.Type(root).Kind != types.Struct {
+		return nil, fmt.Errorf("%w: %s", errStructNotFound, root)
 	}
 
 	return &Generator{
@@ -51,6 +60,21 @@ func NewGenerator(cfg *Config) (*Generator, error) {
 		UseFieldNameByDefault: cfg.UseFieldNameByDefault,
 		TagName:               cfg.TagName,
 	}, nil
+}
+
+// importPath returns the import path of the package matching pattern, which
+// may be an import path or a relative path such as ".".
+func importPath(pattern string) (string, error) {
+	paths, err := parser.New().FindPackages(pattern)
+	if err != nil {
+		return "", fmt.Errorf("finding package %q: %w", pattern, err)
+	}
+
+	if len(paths) != 1 {
+		return "", fmt.Errorf("%w: %q matches %d packages", errNotOnePackage, pattern, len(paths))
+	}
+
+	return paths[0], nil
 }
 
 // loadUniverse loads the types of the root struct and every struct nested in

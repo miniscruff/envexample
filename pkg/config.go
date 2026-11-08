@@ -36,7 +36,7 @@ func NewConfig(args []string) (*Config, error) {
 
 	flagSet.StringVar(&cfg.ExportFile, "export", ".env.example", "`filepath` to export generated example to")
 	flagSet.StringVar(&cfg.ConfigStruct, "type", "", "struct to build example from")
-	flagSet.StringVar(&cfg.Package, "pkg", "", "import package our config struct is located in")
+	flagSet.StringVar(&cfg.Package, "pkg", ".", "import path or relative path of the package our config struct is located in")
 	flagSet.BoolVar(&cfg.DryRun, "dry", false, "output to stdout instead of writing to file")
 	flagSet.BoolVar(&cfg.ShowVersion, "v", false, "show version")
 	flagSet.BoolVar(&cfg.ShowHelp, "h", false, "show help")
