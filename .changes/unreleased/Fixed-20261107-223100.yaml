@@ -1,5 +1,0 @@
-kind: Fixed
-body: Structs without env fields of their own, such as structs only grouping other structs, are no longer written as an empty comment block
-time: 2026-11-07T22:31:00.965196023-08:00
-custom:
-    Issue: "70"

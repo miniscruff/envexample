@@ -1,5 +1,0 @@
-kind: Fixed
-body: Struct fields with `env:"-"` are no longer documented
-time: 2026-11-07T22:30:59.957229112-08:00
-custom:
-    Issue: "69"
