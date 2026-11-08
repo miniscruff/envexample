@@ -3,11 +3,12 @@ package pkg
 import (
 	"fmt"
 	"io"
+	"slices"
 	"sort"
 
-	"k8s.io/gengo/namer"
-	"k8s.io/gengo/parser"
-	"k8s.io/gengo/types"
+	"k8s.io/gengo/v2/namer"
+	"k8s.io/gengo/v2/parser"
+	"k8s.io/gengo/v2/types"
 )
 
 type StructQueueEntry struct {
@@ -19,7 +20,6 @@ type StructQueueEntry struct {
 type Generator struct {
 	queue    []*StructQueueEntry
 	version  string
-	builder  *parser.Builder
 	universe types.Universe
 
 	RequiredIfNoDef       bool
@@ -28,35 +28,93 @@ type Generator struct {
 }
 
 func NewGenerator(cfg *Config) (*Generator, error) {
-	builder := parser.New()
-
-	err := builder.AddDirRecursive(cfg.Package)
-	if err != nil {
-		return nil, fmt.Errorf("finding package directory: %w", err)
+	root := types.Name{
+		Package: cfg.Package,
+		Name:    cfg.ConfigStruct,
 	}
 
-	uni, err := builder.FindTypes()
+	uni, err := loadUniverse(root)
 	if err != nil {
-		return nil, fmt.Errorf("finding package types: %w", err)
+		return nil, err
 	}
 
 	return &Generator{
 		version:  cfg.Version,
-		builder:  builder,
 		universe: uni,
 		queue: []*StructQueueEntry{
 			{
-				TypeName: types.Name{
-					Package: cfg.Package,
-					Name:    cfg.ConfigStruct,
-				},
-				Prefix: cfg.Prefix,
+				TypeName: root,
+				Prefix:   cfg.Prefix,
 			},
 		},
 		RequiredIfNoDef:       cfg.RequiredIfNoDef,
 		UseFieldNameByDefault: cfg.UseFieldNameByDefault,
 		TagName:               cfg.TagName,
 	}, nil
+}
+
+// loadUniverse loads the types of the root struct and every struct nested in
+// it, which can come from any package or module the root package imports.
+// gengo only records the doc comments of types in packages we request, so
+// the packages of nested structs are found first and then requested as well.
+func loadUniverse(root types.Name) (types.Universe, error) {
+	requested := []string{root.Package}
+
+	for {
+		builder := parser.New()
+
+		err := builder.LoadPackages(requested...)
+		if err != nil {
+			return nil, fmt.Errorf("loading packages: %w", err)
+		}
+
+		uni, err := builder.NewUniverse()
+		if err != nil {
+			return nil, fmt.Errorf("finding package types: %w", err)
+		}
+
+		missing := missingPackages(uni.Type(root), requested)
+		if len(missing) == 0 {
+			return uni, nil
+		}
+
+		requested = append(requested, missing...)
+	}
+}
+
+// missingPackages returns the packages of structs nested in t that are not
+// in requested.
+func missingPackages(t *types.Type, requested []string) []string {
+	var missing []string
+
+	seen := map[*types.Type]bool{}
+	queue := []*types.Type{t}
+
+	for len(queue) > 0 {
+		current := queue[0]
+		queue = queue[1:]
+
+		if seen[current] {
+			continue
+		}
+
+		seen[current] = true
+
+		for _, member := range current.Members {
+			if len(member.Type.Members) == 0 {
+				continue
+			}
+
+			pkg := member.Type.Name.Package
+			if pkg != "" && !slices.Contains(requested, pkg) && !slices.Contains(missing, pkg) {
+				missing = append(missing, pkg)
+			}
+
+			queue = append(queue, member.Type)
+		}
+	}
+
+	return missing
 }
 
 func (g *Generator) WriteStruct(writer io.Writer, entry *StructQueueEntry) {
