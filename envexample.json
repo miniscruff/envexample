@@ -1,26 +1,26 @@
 {
-    "version": "0.2.0",
+    "version": "0.3.0",
     "architecture": {
         "32bit": {
-            "url": "https://github.com/miniscruff/envexample/releases/download/v0.2.0/envexample_0.2.0_windows_386.zip",
+            "url": "https://github.com/miniscruff/envexample/releases/download/v0.3.0/envexample_0.3.0_windows_386.zip",
             "bin": [
                 "envexample.exe"
             ],
-            "hash": "9c50a5ecccf759c7e62b748188147ef9065548b60e3750dda76357a4abde57ae"
+            "hash": "b0aed98177809bb9e159af8947673cba268f15da7727a7e8bd966d170ff38559"
         },
         "64bit": {
-            "url": "https://github.com/miniscruff/envexample/releases/download/v0.2.0/envexample_0.2.0_windows_amd64.zip",
+            "url": "https://github.com/miniscruff/envexample/releases/download/v0.3.0/envexample_0.3.0_windows_amd64.zip",
             "bin": [
                 "envexample.exe"
             ],
-            "hash": "8a06bec3a4971a950c897be6c07a70ef5cfe8d274b508d41e505af8aa42e4484"
+            "hash": "5a9e1dbb6d0e5f8ef30cae507297f07dc13df9c660504c61f484d86bea46bf5a"
         },
         "arm64": {
-            "url": "https://github.com/miniscruff/envexample/releases/download/v0.2.0/envexample_0.2.0_windows_arm64.zip",
+            "url": "https://github.com/miniscruff/envexample/releases/download/v0.3.0/envexample_0.3.0_windows_arm64.zip",
             "bin": [
                 "envexample.exe"
             ],
-            "hash": "0857226672545bc6955ab88c16973a48279933ecfb6193346a0e50c5d4ce7469"
+            "hash": "39b9dea073cf490fd57182e7d8997d7f7007f611f5bcc2e21c7c88298a7af3e2"
         }
     },
     "homepage": "https://github.com/miniscruff/envexample",
