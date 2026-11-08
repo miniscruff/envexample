@@ -117,47 +117,66 @@ func missingPackages(t *types.Type, requested []string) []string {
 	return missing
 }
 
+// envField is a struct field loaded from a single environment variable.
+type envField struct {
+	member types.Member
+	opts   *EnvTagOptions
+}
+
 func (g *Generator) WriteStruct(writer io.Writer, entry *StructQueueEntry) {
 	docType := g.universe.Type(entry.TypeName)
-
-	writeLines(writer, entry.FieldDocs, "# ", "#\n")
-	writeLines(writer, docType.CommentLines, "# ", "#\n")
 
 	membs := docType.Members
 	sort.Slice(membs, func(i, j int) bool {
 		return membs[i].Name < membs[j].Name
 	})
 
-	for _, field := range membs {
-		g.WriteField(writer, field, entry.Prefix)
+	var fields []envField
+
+	for _, member := range membs {
+		if namer.IsPrivateGoName(member.Name) {
+			continue
+		}
+
+		opts := NewEnvTagOptions(member.Name, g, member.Type.Kind == types.Slice, member.Tags)
+
+		// ignore fields, including nested structs, with a dash as the env key
+		if opts.Key == "-" {
+			continue
+		}
+
+		// write nested structs later, after this struct
+		if len(member.Type.Members) > 0 {
+			g.queue = append(g.queue, &StructQueueEntry{
+				TypeName:  member.Type.Name,
+				FieldDocs: member.CommentLines,
+				Prefix:    entry.Prefix + opts.Prefix,
+			})
+
+			continue
+		}
+
+		fields = append(fields, envField{member: member, opts: opts})
+	}
+
+	// structs without env fields of their own, such as structs only grouping
+	// other structs, would only write their comments
+	if len(fields) == 0 {
+		return
+	}
+
+	writeLines(writer, entry.FieldDocs, "# ", "#\n")
+	writeLines(writer, docType.CommentLines, "# ", "#\n")
+
+	for _, field := range fields {
+		g.WriteField(writer, field.member, field.opts, entry.Prefix)
 	}
 
 	_, _ = writer.Write([]byte("\n"))
 }
 
-func (g *Generator) WriteField(writer io.Writer, field types.Member, prefix string) {
-	if namer.IsPrivateGoName(field.Name) {
-		return
-	}
-
-	opts := NewEnvTagOptions(field.Name, g, field.Type.Kind == types.Slice, field.Tags)
-
-	// ignore fields, including nested structs, with a dash as the env key
-	if opts.Key == "-" {
-		return
-	}
-
-	if len(field.Type.Members) > 0 {
-		g.queue = append(g.queue, &StructQueueEntry{
-			TypeName:  field.Type.Name,
-			FieldDocs: field.CommentLines,
-			Prefix:    prefix + opts.Prefix,
-		})
-
-		// write our nested struct later
-		return
-	}
-
+// WriteField writes a single environment variable.
+func (g *Generator) WriteField(writer io.Writer, field types.Member, opts *EnvTagOptions, prefix string) {
 	writeLines(writer, field.CommentLines, "# ", "")
 
 	if opts.LoadFile {
