@@ -102,7 +102,7 @@ To install `envexample` outside of a project, use `go install` from latest or by
 
 ```sh
 go install github.com/miniscruff/envexample@latest
-go install github.com/miniscruff/envexample@v0.3.1
+go install github.com/miniscruff/envexample@v0.4.0
 ```
 
 ### Windows Scoop
