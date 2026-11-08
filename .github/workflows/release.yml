@@ -19,7 +19,8 @@ jobs:
     - name: Setup Go
       uses: actions/setup-go@v7
       with:
-        go-version-file: 'go.mod'
+        # build release binaries with the latest Go release
+        go-version: stable
 
     - name: Get the latest version
       id: latest
