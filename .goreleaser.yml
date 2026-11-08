@@ -30,14 +30,6 @@ nfpms:
     formats:
     - deb
     - rpm
-brews:
-  - repository:
-      owner: miniscruff
-      name: envexample
-    homepage: https://github.com/miniscruff/envexample
-    description: Generate a .env.example from an env struct
-    license: MIT
-    skip_upload: auto
 scoops:
   - repository:
       owner: miniscruff
