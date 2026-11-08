@@ -1,0 +1,5 @@
+kind: Added
+body: '`-pkg` defaults to `.`, so `envexample -type Config` works from the config package, such as in a `go:generate` line'
+time: 2026-11-07T22:59:53.621044075-08:00
+custom:
+    Issue: "74"
