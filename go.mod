@@ -1,6 +1,6 @@
 module github.com/miniscruff/envexample
 
-go 1.27
+go 1.26
 
 require k8s.io/gengo/v2 v2.0.0-20260408192533-25e2208e0dc3
 
