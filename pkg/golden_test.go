@@ -10,6 +10,8 @@ import (
 	"github.com/miniscruff/envexample/then"
 )
 
+const defaultTag = "env"
+
 type GoldenTest struct {
 	Config     *Config
 	GoldenFile string
@@ -74,7 +76,7 @@ func TestGoldens(t *testing.T) {
 			GoldenFile: "example",
 			Config: &Config{
 				ConfigStruct: "ExampleConfig",
-				TagName:      "env",
+				TagName:      defaultTag,
 				Prefix:       "",
 			},
 		},
@@ -82,7 +84,7 @@ func TestGoldens(t *testing.T) {
 			GoldenFile: "starting",
 			Config: &Config{
 				ConfigStruct: "StartingConfig",
-				TagName:      "env",
+				TagName:      defaultTag,
 				Prefix:       "",
 			},
 		},
@@ -90,8 +92,22 @@ func TestGoldens(t *testing.T) {
 			GoldenFile: "nested",
 			Config: &Config{
 				ConfigStruct: "NestedConfig",
-				TagName:      "env",
+				TagName:      defaultTag,
 				Prefix:       "",
+			},
+		},
+		{
+			GoldenFile: "ignored",
+			Config: &Config{
+				ConfigStruct: "IgnoredConfig",
+				TagName:      defaultTag,
+			},
+		},
+		{
+			GoldenFile: "empty",
+			Config: &Config{
+				ConfigStruct: "EmptyConfig",
+				TagName:      defaultTag,
 			},
 		},
 		{
